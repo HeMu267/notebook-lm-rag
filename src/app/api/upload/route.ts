@@ -3,13 +3,13 @@ import cloudinary from "@/lib/cloudinary";
 import { UploadApiResponse } from "cloudinary";
 import main from "../../../tools/indexing"
 export async function POST(req: Request) {
-  const cookie = req.headers.get("cookie") || "";
-  const sessionId = cookie;
+  // const cookie = req.headers.get("cookie") || "";
+  // const sessionId = cookie;
   
   
-  if (!sessionId) {
-    return NextResponse.json({ success: false, error: "No session found" }, { status: 403 });
-  }
+  // if (!sessionId) {
+  //   return NextResponse.json({ success: false, error: "No session found" }, { status: 403 });
+  // }
 
 
     const formData = await req.formData();
