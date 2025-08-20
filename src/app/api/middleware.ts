@@ -15,6 +15,7 @@ export function middleware(req: NextRequest) {
       httpOnly: true,
       sameSite: "strict",
       path: "/",
+      secure:true,
     });
   }
   // Count uploads for this session
