@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+PDF RAG Assistant
 
-## Getting Started
+A Next.js-based RAG (Retrieval-Augmented Generation) system that allows users to upload PDFs, index them, and ask questions over their content using OpenAI LLMs. Supports session-based limits and Cloudinary storage for PDFs.
 
-First, run the development server:
+Features
 
-```bash
-npm run dev
+Upload up to 3 PDFs per session.
+
+Store PDFs on Cloudinary (public or private URLs).
+
+Parse PDFs and extract text automatically.
+
+Chunk text for embeddings using LangChain.
+
+Create in-memory vector store per session.
+
+Ask questions over uploaded PDFs using OpenAI embeddings + GPT-4o-mini.
+
+Session-based upload tracking with cookies, no login required.
+
+Tech Stack
+
+Frontend: Next.js 13, React, Tailwind CSS
+
+Backend: Next.js API routes, middleware for session management
+
+PDF Handling: pdf-parse, PDFLoader from LangChain
+
+Vector Store: In-memory per session (MemoryVectorStore)
+
+LLM & Embeddings: OpenAI API (text-embedding-3-small, gpt-4o-mini)
+
+File Storage: Cloudinary (free tier supported)
+
+Getting Started
+1. Clone the repository
+git clone <repo-url>
+cd pdf-rag-assistant
+
+2. Install dependencies
+yarn install
 # or
+npm install --legacy-peer-deps
+
+3. Set environment variables
+
+Create a .env.local file:
+
+OPENAI_API_KEY=sk-xxxx
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+
+4. Run the development server
 yarn dev
 # or
-pnpm dev
-# or
-bun dev
-```
+npm run dev
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Open http://localhost:3000
+ to see the app.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Folder Structure
+/app
+  /api
+    /upload          # Upload PDF to Cloudinary
+    /index-pdf       # Parse & chunk PDF for embeddings
+    /ask             # Query session vector store
+/lib
+  cloudinary.js      # Cloudinary config
+  sessionVectorStore.ts  # In-memory vector store per session
+/middleware.ts       # Session ID + upload tracking
+/components
+  SourcesPanel.tsx   # PDF / Text / URL upload UI
 
-## Learn More
+Usage
 
-To learn more about Next.js, take a look at the following resources:
+Upload PDFs
+Click + Add PDF or submit text/URLs. Each session allows max 3 sources.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Index PDFs
+The backend will automatically fetch the PDF from Cloudinary, parse text, and create embeddings.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Ask Questions
+Send a query via /api/ask to get answers based on uploaded content.
 
-## Deploy on Vercel
+Notes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Session expires when the cookie is cleared or browser refreshes (configurable).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Free-tier friendly: Uses in-memory vector store and free OpenAI embeddings (text-embedding-3-small).
+
