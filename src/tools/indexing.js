@@ -21,10 +21,11 @@ export default async function main(path) {
     const embeddings = new OpenAIEmbeddings({
         model:'text-embedding-3-large'
     })
-    const vectorStore = await QdrantVectorStore.fromDocuments(
+    await QdrantVectorStore.fromDocuments(
         docs,embeddings,{
-            url:'http://localhost:6333',
-            collectionName:"notebook-lm-rag"
+            url:process.env.QDRANT_URL,
+            collectionName:"notebook-lm-rag",
+            apiKey:process.env.QDRANT_KEY,
         }
     )
     return "done";
